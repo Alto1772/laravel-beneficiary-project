@@ -5,5 +5,7 @@ import './bootstrap';
 import.meta.glob([
   '../assets/img/**',
   // '../assets/json/**',
-  '../assets/vendor/fonts/**'
+  '../assets/vendor/fonts/**',
+  // '../assets/vendor/libs/**',
+  // '../assets/js/**',
 ]);

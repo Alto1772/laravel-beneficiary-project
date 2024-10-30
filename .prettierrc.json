@@ -19,7 +19,7 @@
   "overrides": [
     {
       "files": [
-        "full-version/resources/assets/vendor/js/*.js"
+        "resources/assets/vendor/js/*.js"
       ],
       "options": {
         "semi": false

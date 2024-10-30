@@ -20,6 +20,8 @@ class User extends Authenticatable
     'name',
     'email',
     'password',
+    'role',
+    'avatar'
   ];
 
   /**
@@ -43,5 +45,18 @@ class User extends Authenticatable
       'email_verified_at' => 'datetime',
       'password' => 'hashed',
     ];
+  }
+
+  /**
+   * Accessor for avatar URL.
+   */
+  public function getAvatarUrlAttribute()
+  {
+    return $this->avatar ? asset('storage/' . $this->avatar) : asset(config('variables.defaultAvatar'));
+  }
+
+  public function isAdmin(): bool
+  {
+    return $this->role === 'admin';
   }
 }

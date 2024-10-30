@@ -26,7 +26,8 @@
 
   img,
   svg {
-    display: block;
+    display: inline-block;
+    width: auto;
   }
 }
 
@@ -34,6 +35,23 @@
   flex-shrink: 0;
   opacity: 1;
   transition: opacity $menu-animation-duration * 0.5 ease-in-out;
+  font-size: 1.1rem;
+  font-family: Gabarito, sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.layout-menu {
+  .app-brand {
+    height: 64px;
+    margin-top: 12px;
+  }
+
+  .app-brand-logo {
+    img,
+    svg {
+      height: 48px;
+    }
+  }
 }
 
 .app-brand-img-collapsed {
