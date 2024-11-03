@@ -151,8 +151,6 @@
         name: key,
         data: ageGroups[key].map(item => ({ x: item.age, y: item.count }))
       }));
-    console.log(barangayChartData);
-    console.log(ageChartData);
     ageChart.updateSeries(ageChartData);
     barangayChart.updateSeries(barangayChartData);
   };
@@ -171,15 +169,8 @@
   document.querySelectorAll('#expandGraphButton').forEach(el => {
     el.addEventListener('click', () => {
       const graphContainer = el.closest('.graph-container');
-      const expandButton = el;
 
-      if (graphContainer.classList.contains('graph-expanded')) {
-        graphContainer.classList.remove('graph-expanded');
-        expandButton.innerHTML = '<i class="bx bx-expand-horizontal"></i> Expand Graph';
-      } else {
-        graphContainer.classList.add('graph-expanded');
-        expandButton.innerHTML = '<i class="bx bx-collapse-horizontal"></i> Collapse Graph';
-      }
+      graphContainer.classList.toggle('graph-expanded');
     });
   });
 })();

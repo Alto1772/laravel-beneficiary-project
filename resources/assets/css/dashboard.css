@@ -1,15 +1,22 @@
 .graph-container {
   transition: width ease-in-out 300ms;
-}
 
-.graph-expanded {
-  width: 100%;
-  max-width: 100%;
-}
+  &.graph-expanded {
+    width: 100%;
+    max-width: 100%;
+  }
 
-/* Hide all .graph-container elements if any has .graph-expanded */
-.graph-container:has(~ .graph-expanded),
-.graph-container:has(+ .graph-expanded),
-.graph-container.graph-expanded ~ .graph-container {
-  display: none;
+  /* Hide all .graph-container elements if any has .graph-expanded */
+  &:has(~ .graph-expanded),
+  &:has(+ .graph-expanded),
+  &.graph-expanded ~ & {
+    display: none;
+  }
+
+  &.graph-expanded #expandGraphLabel {
+    display: none;
+  }
+  &:not(.graph-expanded) #collapseGraphLabel {
+    display: none;
+  }
 }

@@ -52,9 +52,11 @@
                             <i class="bx bx-dots-vertical-rounded text-muted"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                            <a class="dropdown-item" href="javascript:void(0);" id="expandGraphButton"><i
-                                    class="bx bx-expand-horizontal"></i>
-                                Expand Graph</a>
+                            <a class="dropdown-item" href="#" id="expandGraphButton">
+                                <span id="expandGraphLabel"><i class="bx bx-expand-horizontal"></i> Expand Graph</span>
+                                <span id="collapseGraphLabel"><i class="bx bx-collapse-horizontal"></i> Collapse
+                                    Graph</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -94,9 +96,11 @@
                             <i class="bx bx-dots-vertical-rounded text-muted"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                            <a class="dropdown-item" href="javascript:void(0);" id="expandGraphButton"><i
-                                    class="bx bx-expand-horizontal"></i>
-                                Expand graph</a>
+                            <a class="dropdown-item" href="#" id="expandGraphButton">
+                                <span id="expandGraphLabel"><i class="bx bx-expand-horizontal"></i> Expand Graph</span>
+                                <span id="collapseGraphLabel"><i class="bx bx-collapse-horizontal"></i> Collapse
+                                    Graph</span>
+                            </a>
                             <a class="dropdown-item" href="{{ route('barangay.index') }}"><i
                                     class="bx bx-building-house"></i> Go to Barangays List</a>
                         </div>
