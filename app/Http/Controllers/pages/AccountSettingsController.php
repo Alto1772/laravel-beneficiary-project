@@ -66,7 +66,7 @@ class AccountSettingsController extends Controller
     if ($request->hasFile('avatar')) {
       // Delete old avatar if exists
       if ($user->avatar) {
-        Storage::delete($user->avatar);
+        Storage::delete("public/{$user->avatar}");
       }
 
       $path = $request->file('avatar')->store('avatars', 'public');
