@@ -57,6 +57,8 @@
                                 <span id="collapseGraphLabel"><i class="bx bx-collapse-horizontal"></i> Collapse
                                     Graph</span>
                             </a>
+                            <a href="#" class="dropdown-item" id="exportGraphButton" data-chart-id="ageChart">
+                                <i class="bx bx-export"></i> Export Graph</a>
                         </div>
                     </div>
                 </div>
@@ -101,6 +103,8 @@
                                 <span id="collapseGraphLabel"><i class="bx bx-collapse-horizontal"></i> Collapse
                                     Graph</span>
                             </a>
+                            <a href="#" class="dropdown-item" id="exportGraphButton" data-chart-id="barangayChart">
+                                <i class="bx bx-export"></i> Export Graph</a>
                             <a class="dropdown-item" href="{{ route('barangay.index') }}"><i
                                     class="bx bx-building-house"></i> Go to Barangays List</a>
                         </div>

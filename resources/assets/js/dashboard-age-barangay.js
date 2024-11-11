@@ -1,13 +1,14 @@
 'use strict';
 
 (function () {
-  let cardColor, headingColor, legendColor, labelColor, shadeColor, borderColor;
+  let cardColor, headingColor, legendColor, labelColor, shadeColor, borderColor, fontFamily;
 
   cardColor = config.colors.cardColor;
   headingColor = config.colors.headingColor;
   legendColor = config.colors.bodyColor;
   labelColor = config.colors.textMuted;
   borderColor = config.colors.borderColor;
+  fontFamily = 'Public Sans, sans-serif';
 
   const ageChartEl = document.getElementById('ageChart'),
     ageChartOptions = {
@@ -15,7 +16,8 @@
         height: 350,
         type: 'bar',
         toolbar: { show: false },
-        zoom: { enabled: false }
+        zoom: { enabled: false },
+        id: 'ageChart'
       },
       plotOptions: {
         // bar: { borderRadius: 2, startingShape: 'rounded', endingShape: 'rounded' }
@@ -41,7 +43,7 @@
         labels: {
           style: {
             fontSize: '13px',
-            fontFamily: 'Public Sans',
+            fontFamily: fontFamily,
             colors: labelColor
           }
         },
@@ -56,7 +58,7 @@
         labels: {
           style: {
             fontSize: '13px',
-            fontFamily: 'Public Sans',
+            fontFamily: fontFamily,
             colors: labelColor
           }
         }
@@ -66,7 +68,7 @@
         text: 'Loading...',
         style: {
           fontSize: '1.7em',
-          fontFamily: 'Public Sans',
+          fontFamily: fontFamily,
           fontWeight: 500,
           color: labelColor
         }
@@ -81,7 +83,8 @@
         height: 350,
         type: 'bar',
         toolbar: { show: false },
-        zoom: { enabled: false }
+        zoom: { enabled: false },
+        id: 'barangayChart'
       },
       plotOptions: {
         bar: { borderRadius: 4, startingShape: 'rounded', endingShape: 'rounded' }
@@ -102,7 +105,7 @@
         labels: {
           style: {
             fontSize: '13px',
-            fontFamily: 'Public Sans',
+            fontFamily: fontFamily,
             colors: labelColor
           }
         },
@@ -113,7 +116,7 @@
         labels: {
           style: {
             fontSize: '13px',
-            fontFamily: 'Public Sans',
+            fontFamily: fontFamily,
             colors: labelColor
           }
         }
@@ -123,7 +126,7 @@
         text: 'Loading...',
         style: {
           fontSize: '1.7em',
-          fontFamily: 'Public Sans',
+          fontFamily: fontFamily,
           fontWeight: 500,
           color: labelColor
         }
@@ -137,7 +140,7 @@
     barangayChart.updateOptions({ noData: { text: text } });
   };
 
-  const populateCharts = (data, year = null) => {
+  const populateCharts = data => {
     const barangays = data.barangays,
       ageGroups = data.ageGroups;
 
@@ -154,7 +157,18 @@
     ageChart.updateSeries(ageChartData);
     barangayChart.updateSeries(barangayChartData);
   };
-  fetch('/api/analytics', {
+
+  const getAnalyticsUrl = () => {
+    const baseUrl = '/api/analytics';
+    const url = new URL(baseUrl, window.location.origin);
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.has('year')) url.searchParams.append('year', params.get('year'));
+
+    return url.toString();
+  };
+
+  fetch(getAnalyticsUrl(), {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'same-origin'
@@ -167,10 +181,11 @@
     });
 
   document.querySelectorAll('#expandGraphButton').forEach(el => {
-    el.addEventListener('click', () => {
-      const graphContainer = el.closest('.graph-container');
+    el.addEventListener('click', () => el.closest('.graph-container').classList.toggle('graph-expanded'));
+  });
 
-      graphContainer.classList.toggle('graph-expanded');
-    });
+  document.querySelectorAll('#exportGraphButton').forEach(el => {
+    const chartId = el.dataset.chartId;
+    el.addEventListener('click', () => ApexCharts.getChartByID(chartId).exports.exportToPng());
   });
 })();

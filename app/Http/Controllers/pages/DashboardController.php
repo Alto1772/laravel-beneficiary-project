@@ -16,6 +16,43 @@ class DashboardController extends Controller
     return view('pages.dashboard');
   }
 
+  private function getBarangayBeneficiaryCounts(int $year = null)
+  {
+    // Step 1: Create a subquery for distinct years
+    $yearsSubquery = Beneficiary::select(DB::raw('DISTINCT YEAR(created_at) AS year'))
+      ->ofYear($year);
+
+    // Step 2: Perform cross join with barangays
+    $results = Barangay::select(
+      'barangays.name AS name',
+      'years.year',
+      DB::raw('COUNT(beneficiaries.id) AS count')
+    )
+      ->crossJoinSub($yearsSubquery, 'years')
+      ->leftJoin('beneficiaries', function ($join) {
+        $join->on('barangays.id', '=', 'beneficiaries.barangay_id')
+          ->whereRaw('YEAR(beneficiaries.created_at) = years.year');
+      })
+      ->groupBy('barangays.name', 'years.year')
+      ->orderBy('years.year')
+      ->orderBy('barangays.name')
+      ->get();
+
+    return $results->groupBy('year');
+  }
+
+  private function getBeneficiaryAgeGroup(int $year = null)
+  {
+    $results = Beneficiary::select(DB::raw('YEAR(created_at) as year'), 'age', DB::raw('COUNT(*) as count'))
+      ->ofYear($year)
+      ->groupBy('year', 'age')
+      ->orderBy('year')
+      ->orderBy('age')
+      ->get();
+
+    return $results->groupBy('year');
+  }
+
   public function analytics(Request $request)
   {
     $request->validate([
@@ -23,40 +60,9 @@ class DashboardController extends Controller
     ]);
     $year = $request->input('year');
 
-    // $barangays = Barangay::select('name')->withCount([
-    //   'beneficiaries as count' => function ($query) use ($year) {
-    //     $query->ofYear($year);
-    //   }
-    // ])
-    //   ->orderBy('name', 'asc')
-    //   ->get();
+    $barangays = $this->getBarangayBeneficiaryCounts($year);
+    $ageGroups = $this->getBeneficiaryAgeGroup($year);
 
-    /// THIS CODE IS PURE SHIT!!!!!!!!  PLEASE REPLACE IMMEDIATELY
-    $barangays = Barangay::select('barangays.name', DB::raw('YEAR(beneficiaries.created_at) as year'))
-      ->leftJoin('beneficiaries', 'barangays.id', '=', 'beneficiaries.barangay_id')
-      ->selectRaw('COUNT(beneficiaries.id) as count')
-      ->groupBy('barangays.name', 'year')
-      ->orderBy('year')
-      ->orderBy('barangays.name')
-      ->get()
-      ->groupBy('year')
-      ->map(function ($yearGroup) {
-        return $yearGroup->map(function ($item) {
-          return [
-            'name' => $item->name,
-            'count' => (int) $item->count
-          ];
-        })->values();
-      });
-
-
-    $ageGroups = Beneficiary::select(DB::raw('YEAR(created_at) as year'), 'age', DB::raw('COUNT(*) as count'))
-      ->ofYear($year)
-      ->groupBy('year', 'age')
-      ->orderBy('year')
-      ->orderBy('age')
-      ->get()
-      ->groupBy('year');
     return response()->json(compact('barangays', 'ageGroups'));
   }
 }
