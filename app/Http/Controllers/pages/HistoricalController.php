@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Beneficiary;
 use App\Imports\BeneficiaryImport;
 use Illuminate\Validation\Rules\File;
-use Excel;
+use Maatwebsite\Excel\Excel;
 
 class HistoricalController extends Controller
 {

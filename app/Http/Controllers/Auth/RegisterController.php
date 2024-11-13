@@ -24,11 +24,14 @@ class RegisterController extends Controller
   use RegistersUsers;
 
   /**
-   * Where to redirect users after registration.
+   * This function is responsible for determining the URL to redirect the user to after successful login.
    *
-   * @var string
+   * @return string The URL to redirect the user to after successful login.
    */
-  protected $redirectTo = '/dashboard';
+  protected function redirectTo()
+  {
+    return route('dashboard.index');
+  }
 
   /**
    * Create a new controller instance.

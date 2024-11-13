@@ -29,4 +29,6 @@ return [
   "templateName" => "TUPAD SYSTEM",
   "copyrightTag" => "&copy; 2024 AKMC",
   "defaultAvatar" => "assets/img/avatars/1.png",
+
+  "canRegister" => true,
 ];

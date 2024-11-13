@@ -1,25 +1,25 @@
 {
   "menu": [
     {
-      "url": "/dashboard",
+      "url": "/admin/dashboard",
       "icon": "menu-icon tf-icons bx bx-home-smile",
       "slug": "dashboard.index",
       "name": "Dashboard"
     },
     {
-      "url": "/beneficiaries",
+      "url": "/admin/beneficiaries",
       "icon": "menu-icon tf-icons bx bx-gift",
       "slug": "beneficiary.index",
       "name": "Beneficiaries"
     },
     {
-      "url": "/barangays",
+      "url": "/admin/barangays",
       "icon": "menu-icon tf-icons bx bx-building-house",
       "slug": "barangay.index",
       "name": "Barangays"
     },
     {
-      "url": "/history",
+      "url": "/admin/history",
       "icon": "menu-icon tf-icons bx bx-history",
       "slug": "historical.index",
       "name": "Historical Data"
@@ -28,28 +28,28 @@
       "menuHeader": "Account"
     },
     {
-      "url": "/account",
+      "url": "/admin/account",
       "icon": "menu-icon tf-icons bx bx-user",
       "slug": "account.index",
       "name": "Account Settings",
       "authType": "user"
     },
     {
-      "url": "/login",
+      "url": "/admin/login",
       "icon": "menu-icon tf-icons bx bx-log-in",
       "slug": "login",
       "name": "Login",
       "authType": "guest"
     },
     {
-      "url": "/register",
+      "url": "/admin/register",
       "icon": "menu-icon tf-icons bx bx-id-card",
       "slug": "register",
       "name": "Register",
       "authType": "guest"
     },
     {
-      "url": "/logout",
+      "url": "/admin/logout",
       "icon": "menu-icon tf-icons bx bx-log-out",
       "slug": "logout",
       "name": "Logout",

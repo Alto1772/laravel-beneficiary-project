@@ -69,12 +69,14 @@
                             </div>
                         </form>
 
-                        <p class="text-center">
-                            <span>New to our site?</span>
-                            <a href="{{ route('register') }}">
-                                <span>Create an account</span>
-                            </a>
-                        </p>
+                        @if (Route::has('register'))
+                            <p class="text-center">
+                                <span>New to our site?</span>
+                                <a href="{{ route('register') }}">
+                                    <span>Create an account</span>
+                                </a>
+                            </p>
+                        @endif
                         <!-- Back to Main Page -->
                         <p class="text-center">
                             <a href="{{ url('/') }}">
