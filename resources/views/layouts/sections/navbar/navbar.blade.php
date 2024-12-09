@@ -19,7 +19,8 @@
 @if (isset($navbarFull))
     <div class="navbar-brand app-brand d-none d-xl-flex py-0 me-4">
         <a href="{{ url('/') }}" class="app-brand-link gap-2">
-            <span class="app-brand-logo">@include('_partials.macros', ['width' => 25, 'withbg' => 'var(--bs-primary)'])</span>
+            <span class="app-brand-logo"><img src="{{ asset('assets/img/icons/brands/DOLE.svg') }}" alt="DOLE logo"
+                    height="32px"></span>
             <span class="app-brand-text menu-text fw-bold text-heading">{{ config('variables.templateName') }}</span>
         </a>
     </div>

@@ -24,10 +24,9 @@
                     @continue ($menu->authType != 'user' && $menu->authType != 'admin')
 
                     @continue ($menu->authType == 'admin' && Auth::user()->role != 'admin')
-                @endauth
-                @guest
+                @else
                     @continue ($menu->authType != 'guest')
-                @endguest
+                @endauth
             @endisset
 
             {{-- menu headers --}}

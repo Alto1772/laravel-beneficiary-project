@@ -1,0 +1,24 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "slug": "page.home",
+      "name": "Home"
+    },
+    {
+      "url": "/services",
+      "slug": "page.services",
+      "name": "Services"
+    },
+    {
+      "url": "/contact",
+      "slug": "page.contact",
+      "name": "Contact"
+    },
+    {
+      "url": "/about",
+      "slug": "page.about",
+      "name": "About"
+    }
+  ]
+}

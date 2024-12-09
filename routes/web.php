@@ -7,13 +7,13 @@ use App\Http\Controllers\pages\DashboardController;
 use App\Http\Controllers\pages\HistoricalController;
 use Illuminate\Support\Facades\Route;
 
-// Route::view('/', 'pages.home');
-// Route::view('/about', 'pages.about');
-// Route::view('/services', 'pages.services');
-// Route::view('/contact', 'pages.contact');
-Route::redirect('/', '/admin/dashboard');
+Route::view('/', 'pages.home')->name('page.home');
+Route::view('/about', 'pages.about')->name('page.about');
+Route::view('/services', 'pages.services')->name('page.services');
+Route::view('/contact', 'pages.contact')->name('page.contact');
+// Route::redirect('/', '/admin/dashboard');
 
-Route::prefix('/api')->name('api.')->group(function () {
+Route::prefix('/api')->name('api.')->middleware(['api'])->group(function () {
   Route::get('/analytics', [DashboardController::class, 'analytics'])->name('dashboard.analytics');
 
   Route::middleware(['auth'])->group(function () {
@@ -26,6 +26,8 @@ Route::prefix('/api')->name('api.')->group(function () {
 });
 
 Route::prefix('/admin')->group(function () {
+  Route::redirect("/", "/admin/dashboard");
+
   Auth::routes([
     'login' => true,
     'logout' => true,

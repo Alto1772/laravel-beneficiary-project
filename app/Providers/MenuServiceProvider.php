@@ -17,15 +17,21 @@ class MenuServiceProvider extends ServiceProvider
     //
   }
 
+  private function shareMenuData($path, $key)
+  {
+    $menuJson = file_get_contents(base_path($path));
+    $menuData = json_decode($menuJson);
+
+    // Share all menuData to all the views
+    $this->app->make('view')->share($key, [$menuData]);
+  }
+
   /**
    * Bootstrap services.
    */
   public function boot(): void
   {
-    $verticalMenuJson = file_get_contents(base_path('resources/menu/verticalMenu.json'));
-    $verticalMenuData = json_decode($verticalMenuJson);
-
-    // Share all menuData to all the views
-    $this->app->make('view')->share('menuData', [$verticalMenuData]);
+    $this->shareMenuData('resources/menu/verticalMenu.json', 'menuData');
+    $this->shareMenuData('resources/menu/navMenu.json', 'navData');
   }
 }
