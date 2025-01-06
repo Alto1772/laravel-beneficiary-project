@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\pages;
 
+use App\Exports\BeneficiaryExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Beneficiary;
 use App\Imports\BeneficiaryImport;
 use Illuminate\Validation\Rules\File;
-use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HistoricalController extends Controller
 {
@@ -15,7 +16,7 @@ class HistoricalController extends Controller
   public function index(Request $request)
   {
     $validatedData = $request->validate([
-      'year' => 'nullable|integer|min:2000|max:' . date('Y'),
+      'year' => 'nullable|integer|min:2019|max:' . date('Y'),
       'barangay' => 'nullable|string|exists:barangays,name',
       'q' => 'nullable|string',
     ]);
@@ -51,7 +52,7 @@ class HistoricalController extends Controller
   {
     $request->validate([
       'dataset' => ['required', File::types(['csv', 'xls', 'xlsx'])->max('1mb')],
-      'year' => ['required', 'integer', 'min:2000', 'max:' . date('Y')],
+      'year' => ['required', 'integer', 'min:2019', 'max:' . date('Y')],
     ], [
       'dataset.mimes' => 'Dataset must be in a CSV, Excel XLS & XLSX format',
     ]);
@@ -59,5 +60,15 @@ class HistoricalController extends Controller
     Excel::import(new BeneficiaryImport($request->get('year')), $request->file('dataset'));
 
     return redirect()->back()->with(['success' => 'Data Imported successfully']);
+  }
+
+  public function exportToExcel(Request $request)
+  {
+    $request->validate([
+      'year' => ['nullable', 'integer', 'min:2019', 'max:' . date('Y')],
+    ]);
+    $year = $request->get('year');
+
+    return Excel::download(new BeneficiaryExport($year), 'beneficiaries-' . ($year ?? 'all') . '.xlsx');
   }
 }

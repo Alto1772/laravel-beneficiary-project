@@ -1,13 +1,13 @@
 @extends('layouts/contentNavbarLayout', ['isMenu' => false, 'isMainNavbar' => true, 'navbarFull' => true])
 
-@section('title', 'Home page')
+@section('title', 'DOLE Tupad Program')
 
 @section('content')
     <!-- Home Section -->
     <section id="home" class="container-xxl container-p-y text-center">
         <div class="container py-5 bg-success rounded-3 bg-opacity-25">
             <div class="d-flex align-items-start gap-2 flex-column">
-                <h1 class="display-4">Welcome to DOLE Tupad #BKBK Program</h1>
+                <h1 class="display-4">Welcome to DOLE Tupad Program</h1>
                 <p class="lead">Empowering Disadvantaged and Displaced Workers through Community Support.</p>
                 <a href="#contact" class="btn btn-success btn-lg">Get Involved</a>
             </div>
@@ -16,9 +16,9 @@
 
     <!-- Services Section -->
     <section id="services" class="container-fluid container-p-y">
-        <div class="container py-5 bg-light rounded-3">
-            <h2 class="text-center mb-5">Our Services</h2>
-            <div class="row">
+        <div class="container py-5 rounded-3">
+            <h2 class="text-center mb-6">Our Services</h2>
+            <div class="row mb-4">
                 <div class="col-md-4 text-center mb-5">
                     <div class="mb-3">
                         <img src="{{ asset('assets/img/icons/flaticon/employee-training.png') }}"
@@ -42,6 +42,28 @@
                     </div>
                     <h4>Support & Training</h4>
                     <p>Providing personal accident insurance, health and safety brochures, and cleaning materials.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 text-center">
+
+                    <div class="mb-3">
+                        <img src="{{ asset('assets/img/icons/flaticon/financial-analysis.png') }}"
+                            alt="paper analysis outline image" width="100px" class="img-fluid">
+                    </div>
+                    <h4>Monitoring and Evaluation Services</h4>
+                    <p>Implementing a web-based system to track project progress, monitor worker performance, and ensure
+                        transparency and accountability in wage disbursement.</p>
+                </div>
+                <div class="col-md-6 text-center">
+
+                    <div class="mb-3">
+                        <img src="{{ asset('assets/img/icons/flaticon/social-care.png') }}" alt="social care outline image"
+                            width="100px" class="img-fluid">
+                    </div>
+                    <h4>Community Infrastructure Support</h4>
+                    <p>Engaging workers in repairing, maintaining, and improving community infrastructure such as roads,
+                        drainage systems, and public facilities.</p>
                 </div>
             </div>
         </div>
@@ -102,11 +124,11 @@
     <!-- About Section -->
     <section id="about" class="container-fluid container-p-y">
         <div class="container py-5 bg-light rounded-3">
-            <h2 class="text-center mb-5">About Tupad #BKBK</h2>
+            <h2 class="text-center mb-5">About TUPAD</h2>
             <p>
                 The Department of Labor and Employment (DOLE) has initiated the Tulong Panghanapbuhay Sa Ating
-                Disadvantaged/Displaced Workers Program (Tupad) #Barangay Ko, Bahay Ko Disinfection/Sanitation Project
-                (#BKBK) aimed at assisting informal sector workers impacted by the Enhanced Community Quarantine. Below are
+                Disadvantaged/Displaced Workers Program (Tupad) aimed at assisting informal sector workers impacted by the
+                Enhanced Community Quarantine. Below are
                 the essential details:
             </p>
 
@@ -115,7 +137,7 @@
                     <h2 class="accordion-header">
                         <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
                             data-bs-target="#whatIsTupad" aria-expanded="true" aria-controls="whatIsTupad" role="tabpanel">
-                            What is TUPAD #BKBK and who are qualified for this?
+                            What is TUPAD and who are qualified for this?
                         </button>
                     </h2>
 
@@ -123,7 +145,7 @@
                     <div id="whatIsTupad" class="accordion-collapse collapse">
                         <div class="accordion-body">
                             <p>
-                                TUPAD #BKBK is a community-based safety net program designed to provide temporary employment
+                                TUPAD is a community-based safety net program designed to provide temporary employment
                                 to workers from
                                 the informal sectors who are underemployed, self-employed, or displaced marginalized workers
                                 affected by the

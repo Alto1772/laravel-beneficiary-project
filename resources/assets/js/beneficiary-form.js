@@ -3,7 +3,6 @@
 (function (global) {
   const municipalitySelect = document.getElementById('municipalitySelect');
   const barangaySelect = document.getElementById('barangaySelect');
-  const barangayRow = document.getElementById('barangayRow');
   const submitButton = document.getElementById('submitButton');
   let barangaySelectAborter = null;
 
@@ -11,7 +10,6 @@
     // If no municipality is selected, hide the barangay row and reset options
     barangaySelect.innerHTML = '<option value="" selected>-- Select Barangay --</option>';
     barangaySelect.disabled = true;
-    barangayRow.classList.add('d-none');
     if (barangaySelectAborter) barangaySelectAborter.abort();
   };
 
@@ -42,7 +40,7 @@
 
         // Show the barangay selection row
         barangaySelect.disabled = false;
-        barangayRow.classList.remove('d-none');
+        submitButton.disabled = false;
       })
       .catch(error => {
         if (error.name === 'AbortError') return;
@@ -89,11 +87,14 @@
 
       if (municipalityId) {
         populateBarangaysSelection(municipalityId, global.oldBarangayId);
-        submitButton.disabled = false;
       } else {
         resetBarangaysSelection();
         submitButton.disabled = true;
       }
+    });
+
+    barangaySelect.addEventListener('change', function () {
+      submitButton.disabled = this.value ? false : true;
     });
   });
 })(window);

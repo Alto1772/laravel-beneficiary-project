@@ -13,7 +13,7 @@ class BarangayController extends Controller
   public function index(Request $request)
   {
     // $request->validate([
-    //   'year' => 'nullable|integer|min:2000|max:' . date('Y'),
+    //   'year' => 'nullable|integer|min:2019|max:' . date('Y'),
     // ]);
     // $year = $request->input('year', Carbon::now()->year);
     $year = Carbon::now()->year;

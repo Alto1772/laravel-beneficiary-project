@@ -35,7 +35,7 @@
                                     // add date option generator here and replace below
                                     const currentYear = new Date().getFullYear();
                                     const yearOptions = Array.from({
-                                        length: currentYear - 2000 + 1
+                                        length: currentYear - 2019 + 1
                                     }, (_, i) => currentYear - i);
                                     yearOptions.map(year => {
                                         optionEl = document.createElement('option');
@@ -81,7 +81,7 @@
                                     // add date option generator here and replace below
                                     const currentYear = new Date().getFullYear();
                                     const yearOptions = Array.from({
-                                        length: currentYear - 2000 + 1
+                                        length: currentYear - 2019 + 1
                                     }, (_, i) => currentYear - i);
                                     yearOptions.map(year => {
                                         optionEl = document.createElement('option');

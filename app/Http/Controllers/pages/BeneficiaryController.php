@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Barangay;
 use App\Models\Beneficiary;
 use App\Models\Municipality;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -16,10 +17,13 @@ class BeneficiaryController extends Controller
     $validatedData = $request->validate([
       'barangay' => 'nullable|string|exists:barangays,name',
       'q' => 'nullable|string',
+      'project_id' => 'integer|exists:projects,id'
     ]);
 
     $searchTerm = $request->input('q');
     $barangayName = $request->input('barangay');
+    $project_id = $request->input('project_id');
+    $project_name = !empty($project_id) ? Project::find($project_id)->name : null;
 
     $builder = Beneficiary::with('barangay.municipality');
 
@@ -37,18 +41,26 @@ class BeneficiaryController extends Controller
       // ->orWhere('barangay.name', 'LIKE', "%{$searchTerm}%");
     }
 
+    if (!empty($project_id)) {
+      $builder->where('project_id', $project_id);
+    }
+
     $data = $builder->paginate(15)->withQueryString();
 
-    return view('pages.beneficiaries.index', compact('data', 'barangayName', 'searchTerm'));
+    return view('pages.beneficiaries.index', compact('data', 'barangayName', 'searchTerm', 'project_name'));
   }
 
-  public function pageAdd()
+  public function pageAdd(Request $request)
   {
+    $request->session()->put('previousPage', url()->previous());
+
     return view('pages.beneficiaries.create');
   }
 
-  public function pageUpdate(int $id)
+  public function pageUpdate(Request $request, int $id)
   {
+    $request->session()->put('previousPage', url()->previous());
+
     $beneficiary = Beneficiary::with('barangay.municipality')->findOrFail($id);
 
     return view('pages.beneficiaries.update', compact('beneficiary'));
@@ -57,27 +69,36 @@ class BeneficiaryController extends Controller
   public function add(Request $request)
   {
     $validatedData = $request->validate([
-      'name' => 'required|string|max:255',
+      'first_name' => 'required|string|max:255',
+      'last_name' => 'nullable|string|max:20',
+      'middle_initial' => 'nullable|string|max:5',
       'barangay' => 'required|exists:barangays,id',
       'municipality' => 'required|exists:municipalities,id',
       'age' => 'required|integer|min:1|max:200',
+      'project_id' => 'nullable|exists:projects,id',
     ]);
 
     Beneficiary::create([
-      'name' => $validatedData['name'],
+      'first_name' => $validatedData['first_name'],
+      'last_name' => $validatedData['last_name'],
+      'middle_initial' => $validatedData['middle_initial'],
       'barangay_id' => $validatedData['barangay'],
       'municipality_id' => $validatedData['municipality'],
+      'project_id' => $validatedData['project_id'],
       'age' => $validatedData['age'],
       'year' => Carbon::now()->year,
     ]);
 
-    return redirect()->route('beneficiary.index')->with(['success' => 'Beneficiary added successfully']);
+    return redirect($request->session()->get('previousPage', route('beneficiary.index')))
+      ->with(['success' => 'Beneficiary added successfully']);
   }
 
   public function update(Request $request, int $id)
   {
     $validatedData = $request->validate([
-      'name' => 'required|string|max:255',
+      'first_name' => 'required|string|max:255',
+      'last_name' => 'nullable|string|max:20',
+      'middle_initial' => 'nullable|string|max:5',
       'barangay' => 'required|exists:barangays,id',
       'municipality' => 'required|exists:municipalities,id',
       'age' => 'required|integer|min:1|max:200',
@@ -85,13 +106,16 @@ class BeneficiaryController extends Controller
 
     $beneficiary = Beneficiary::findOrFail($id);
     $beneficiary->update([
-      'name' => $validatedData['name'],
+      'first_name' => $validatedData['first_name'],
+      'last_name' => $validatedData['last_name'],
+      'middle_initial' => $validatedData['middle_initial'],
       'barangay_id' => $validatedData['barangay'],
       'municipality_id' => $validatedData['municipality'],
       'age' => $validatedData['age'],
     ]);
 
-    return redirect()->route('beneficiary.index')->with(['success' => 'Beneficiary updated successfully']);
+    return redirect($request->session()->get('previousPage', route('beneficiary.index')))
+      ->with(['success' => 'Beneficiary updated successfully']);
   }
   public function updateName(Request $request)
   {
@@ -113,6 +137,6 @@ class BeneficiaryController extends Controller
 
     $beneficiary_name = $beneficiary->name ?? 'Unknown';
 
-    return redirect()->route('beneficiary.index')->with(['success' => "Beneficiary {$beneficiary_name} deleted successfully"]);
+    return redirect()->back()->with(['success' => "Beneficiary {$beneficiary_name} deleted successfully"]);
   }
 }

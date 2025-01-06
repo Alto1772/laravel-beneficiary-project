@@ -13,6 +13,12 @@
       "name": "Beneficiaries"
     },
     {
+      "url": "/admin/projects",
+      "icon": "menu-icon tf-icons bx bx-spreadsheet",
+      "slug": "projects.index",
+      "name": "Projects"
+    },
+    {
       "url": "/admin/barangays",
       "icon": "menu-icon tf-icons bx bx-building-house",
       "slug": "barangay.index",

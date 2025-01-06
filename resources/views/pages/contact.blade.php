@@ -31,7 +31,7 @@
                     <h4 class="card-title mb-4">Contact Information</h4>
                     <ul class="list-unstyled fs-5">
                         <li class="mb-3">
-                            <strong>Address:</strong> Near at Bus Terminal Bicol Isarog, 2nd Floor, Conception, Virac,
+                            <strong>Address:</strong> Near at Bus Terminal Llantino Bldg., 2nd Floor, Conception, Virac,
                             Catanduanes
                         </li>
                     </ul>

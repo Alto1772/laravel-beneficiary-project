@@ -7,11 +7,11 @@
     <!-- About Section -->
     <section id="about" class="container-fluid container-p-y">
         <div class="container py-5 rounded-3">
-            <h2 class="text-center mb-5">About Tupad #BKBK</h2>
+            <h2 class="text-center mb-5">About TUPAD</h2>
             <p>
                 The Department of Labor and Employment (DOLE) has initiated the Tulong Panghanapbuhay Sa Ating
-                Disadvantaged/Displaced Workers Program (Tupad) #Barangay Ko, Bahay Ko Disinfection/Sanitation Project
-                (#BKBK) aimed at assisting informal sector workers impacted by the Enhanced Community Quarantine. Below are
+                Disadvantaged/Displaced Workers Program (TUPAD) aimed at assisting informal sector workers impacted by the
+                Enhanced Community Quarantine. Below are
                 the essential details:
             </p>
 
@@ -20,7 +20,7 @@
                     <h2 class="accordion-header">
                         <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
                             data-bs-target="#whatIsTupad" aria-expanded="true" aria-controls="whatIsTupad" role="tabpanel">
-                            What is TUPAD #BKBK and who are qualified for this?
+                            What is TUPAD and who are qualified for this?
                         </button>
                     </h2>
 
@@ -28,7 +28,7 @@
                     <div id="whatIsTupad" class="accordion-collapse collapse">
                         <div class="accordion-body">
                             <p>
-                                TUPAD #BKBK is a community-based safety net program designed to provide temporary employment
+                                TUPAD is a community-based safety net program designed to provide temporary employment
                                 to workers from
                                 the informal sectors who are underemployed, self-employed, or displaced marginalized workers
                                 affected by the

@@ -13,7 +13,7 @@
                 {{-- <div class="me-2">
                     <form action="{{ url()->current() }}" method="GET">
                         <select class="form-select" name="year" id="year" onchange="this.form.submit()">
-                            @foreach (range(date('Y'), 2000) as $yi)
+                            @foreach (range(date('Y'), 2019) as $yi)
                                 <option value="{{ $yi }}" @selected($year == $yi)>
                                     {{ $yi }}
                                 </option>

@@ -5,6 +5,7 @@ use App\Http\Controllers\pages\BeneficiaryController;
 use App\Http\Controllers\pages\BarangayController;
 use App\Http\Controllers\pages\DashboardController;
 use App\Http\Controllers\pages\HistoricalController;
+use App\Http\Controllers\pages\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'pages.home')->name('page.home');
@@ -55,6 +56,7 @@ Route::prefix('/admin')->group(function () {
   Route::controller(HistoricalController::class)->middleware(['auth'/* , 'role:admin' */])->group(function () {
     Route::get('/history', 'index')->name('historical.index');
     Route::post('/history/import', 'importFromExcel')->name('historical.import');
+    Route::get('/history/export', 'exportToExcel')->name('historical.export');
   });
 
   Route::controller(AccountSettingsController::class)->middleware(['auth'])->group(function () {
@@ -63,4 +65,6 @@ Route::prefix('/admin')->group(function () {
     Route::post('/account/update/username', 'updateName')->name('account.update.username');
     Route::post('/account/update/password', 'updatePassword')->name('account.update.password');
   });
+
+  Route::resource('/projects', ProjectController::class)->middleware(['auth']);
 });

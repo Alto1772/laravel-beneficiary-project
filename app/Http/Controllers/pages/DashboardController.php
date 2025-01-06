@@ -56,7 +56,7 @@ class DashboardController extends Controller
   public function analytics(Request $request)
   {
     $request->validate([
-      'year' => 'nullable|integer|min:2000|max:' . date('Y'),
+      'year' => 'nullable|integer|min:2019|max:' . date('Y'),
     ]);
     $year = $request->input('year');
 

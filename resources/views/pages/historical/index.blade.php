@@ -2,6 +2,13 @@
 
 @section('title', 'Historical Data | ' . config('variables.templateName'))
 
+@section('page-script')
+    <script>
+        window.deleteRouteTemplate = "{{ route('beneficiary.delete', ['id' => ':id']) }}";
+    </script>
+    @vite('resources/assets/js/beneficiary-index.js')
+@endsection
+
 @section('content')
     @include('_partials.alerts')
 
@@ -24,10 +31,9 @@
                                     yearEl = document.getElementById('year');
                                     selectedYear = {{ $year ?? 'null' }};
 
-                                    // add date option generator here and replace below
                                     const currentYear = new Date().getFullYear();
                                     const yearOptions = Array.from({
-                                        length: currentYear - 2000 + 1
+                                        length: currentYear - 2019 + 1
                                     }, (_, i) => currentYear - i);
                                     yearOptions.map(year => {
                                         optionEl = document.createElement('option');
@@ -47,7 +53,8 @@
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="btnGroupDrop1">
                         <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
                             data-bs-target="#uploadFileModal"><i class='bx bx-import'></i> Import Data</a>
-                        <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal">
+                        <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
+                            data-bs-target="#exportFileModal">
                             <i class='bx bx-export'></i> Export Data
                         </a>
                     </div>
@@ -63,6 +70,7 @@
                         <th>Municipality</th>
                         <th>Age</th>
                         <th>Year added</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -73,21 +81,22 @@
                             <td><span>{{ $beneficiary->barangay->municipality->name }}</span></td>
                             <td><span>{{ $beneficiary->age }}</span></td>
                             <td><span>{{ $beneficiary->created_at->year }}</span></td>
-                            {{-- <td>
+                            <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                         data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="javascript:void(0);"><i
-                                                class="bx bx-edit-alt me-1"></i>
-                                            Edit</a>
                                         <a class="dropdown-item"
-                                            href="{{ route('beneficiary.delete', ['id' => $loop->index]) }}"><i
-                                                class="bx bx-trash me-1"></i>
-                                            Delete</a>
+                                            href="{{ route('beneficiary.edit', ['id' => $beneficiary->id]) }}">
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                            Edit</a>
+                                        <button type="button" class="dropdown-item" id="deleteEntryButton"
+                                            data-id="{{ $beneficiary->id }}">
+                                            <i class="bx bx-trash me-1"></i> Delete
+                                        </button>
                                     </div>
                                 </div>
-                            </td> --}}
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -124,7 +133,7 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label" for="year">Year</label>
-                            <input class="form-control" type="number" name="year" id="year" min="2000"
+                            <input class="form-control" type="number" name="year" id="year" min="2019"
                                 max="{{ date('Y') }}" value="{{ date('Y') }}">
                         </div>
                     </div>
@@ -137,4 +146,56 @@
             </div>
         </div>
     </div>
+
+    <!-- Export Data Modal -->
+    <div class="modal fade" id="exportFileModal" tabindex="-1" aria-labelledby="exportFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form action="{{ route('historical.export') }}" method="get">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exportFileModalLabel">Export Beneficiaries Data to Excel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-4">
+                            <label class="form-label" for="year">Year</label>
+                            <input class="form-control" type="number" name="year" id="year" min="2019"
+                                max="{{ date('Y') }}" value="{{ date('Y') }}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary mx-2" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary mx-2"><i class='bx bx-export'></i>
+                            Export</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Entry Modal -->
+    <div class="modal fade" id="deleteEntryModal" tabindex="-1" aria-labelledby="deleteEntryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteEntryModalLabel">Delete Beneficiary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this beneficiary?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary me-3" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteEntryForm" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Delete Entry Modal -->
 @endsection
