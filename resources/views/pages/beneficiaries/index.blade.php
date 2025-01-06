@@ -15,7 +15,13 @@
     <!-- Basic Bootstrap Table -->
     <div class="card border border-primary px-md-6">
         <div class="card-header header-elements justify-content-around gap-3 p-4">
-            <h5 class="mb-0 me-2 flex-grow">{{ \Carbon\Carbon::now()->year }} TUPAD BENEFICIARIES</h5>
+            <h5 class="mb-0 me-2 flex-grow">
+                @empty($project_name)
+                    {{ \Carbon\Carbon::now()->year }} TUPAD BENEFICIARIES
+                @else
+                    BENEFICIARIES for <b>{{ $project_name }}</b>
+                @endempty
+            </h5>
             <div class="card-header-elements flex-fill">
                 @include('_partials.search-bar')
             </div>

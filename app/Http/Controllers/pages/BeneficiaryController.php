@@ -17,35 +17,30 @@ class BeneficiaryController extends Controller
     $validatedData = $request->validate([
       'barangay' => 'nullable|string|exists:barangays,name',
       'q' => 'nullable|string',
-      'project_id' => 'integer|exists:projects,id'
+      'project_id' => 'nullable|integer|exists:projects,id'
     ]);
 
     $searchTerm = $request->input('q');
     $barangayName = $request->input('barangay');
     $project_id = $request->input('project_id');
+    $currentYear = Carbon::now()->year;
+
+    $data = Beneficiary::with(['barangay.municipality', 'project'])
+      ->ofYear($currentYear)
+      ->when($barangayName, function ($query, $barangayName) {
+        $query->whereHas('barangay', function ($query) use ($barangayName) {
+          $query->where('name', $barangayName);
+        });
+      })
+      ->when($searchTerm, function ($query, $searchTerm) {
+        $query->whereNameLike($searchTerm);
+      })
+      ->when($project_id, function ($query, $project_id) {
+        $query->where('project_id', $project_id);
+      })
+      ->paginate(15)->withQueryString();
+
     $project_name = !empty($project_id) ? Project::find($project_id)->name : null;
-
-    $builder = Beneficiary::with('barangay.municipality');
-
-    // Get from this year
-    $builder = $builder->ofYear(Carbon::now()->year);
-
-    if (!empty($barangayName)) {
-      $builder->whereHas('barangay', function ($query) use ($barangayName) {
-        $query->where('name', $barangayName);
-      });
-    }
-
-    if (!empty($searchTerm)) {
-      $builder->where('name', 'LIKE', "%{$searchTerm}%");
-      // ->orWhere('barangay.name', 'LIKE', "%{$searchTerm}%");
-    }
-
-    if (!empty($project_id)) {
-      $builder->where('project_id', $project_id);
-    }
-
-    $data = $builder->paginate(15)->withQueryString();
 
     return view('pages.beneficiaries.index', compact('data', 'barangayName', 'searchTerm', 'project_name'));
   }

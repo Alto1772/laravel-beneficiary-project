@@ -19,14 +19,12 @@ class ProjectController extends Controller
 
     $searchTerm = $request->input('q');
 
-    $builder = Project::query();
-    if (!empty($searchTerm)) {
-      $builder = Project::where('name', 'LIKE', "%{$searchTerm}%");
-    }
+    $projects = Project::when($searchTerm, function ($query, $searchTerm) {
+      $query->where('name', 'LIKE', "%{$searchTerm}%");
+    })
+      ->paginate(10)->withQueryString();
 
-    $projects = $builder->paginate(10)->withQueryString();
-
-    if ($projects->isEmpty()) {
+    if ($request->collect()->isEmpty() && $projects->isEmpty()) {
       return redirect()->route('projects.create');
     }
 

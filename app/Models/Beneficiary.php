@@ -68,4 +68,11 @@ class Beneficiary extends Model
       return $query;
     }
   }
+
+  public function scopeWhereNameLike($query, $name)
+  {
+    return $query->where('first_name', 'LIKE', "%{$name}%")
+      ->orWhere('last_name', 'LIKE', "%{$name}%")
+      ->orWhere('middle_initial', 'LIKE', "%{$name}%");
+  }
 }

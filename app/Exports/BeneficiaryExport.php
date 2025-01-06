@@ -21,12 +21,10 @@ class BeneficiaryExport implements FromQuery, WithMapping, WithHeadings, ShouldA
 
   public function query()
   {
-    $builder = Beneficiary::query()->with('barangay.municipality');
-    if (!$this->year !== null) {
-      $builder->ofYear($this->year);
-    }
-
-    return $builder;
+    return Beneficiary::with('barangay.municipality')
+      ->when($this->year, function ($query, $year) {
+        $query->ofYear($year);
+      });
   }
 
   public function headings(): array

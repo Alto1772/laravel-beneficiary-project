@@ -19,31 +19,32 @@ class HistoricalController extends Controller
       'year' => 'nullable|integer|min:2019|max:' . date('Y'),
       'barangay' => 'nullable|string|exists:barangays,name',
       'q' => 'nullable|string',
+      'project_id' => 'nullable|integer|exists:projects,id'
     ]);
 
     $year = $request->input('year');
     $searchTerm = $request->input('q');
     $barangayName = $request->input('barangay');
+    $project_id = $request->input('project_id');
 
-    $builder = Beneficiary::with('barangay.municipality');
-
-    if (!empty($year)) {
-      $builder = $builder->ofYear($year);
-    }
-
-    if (!empty($barangayName)) {
-      $builder->whereHas('barangay', function ($query) use ($barangayName) {
-        $query->where('name', $barangayName);
-      });
-    }
-
-    if (!empty($searchTerm)) {
-      $builder->where('name', 'LIKE', "%{$searchTerm}%");
-      // ->orWhere('barangay.name', 'LIKE', "%{$searchTerm}%");
-    }
-
-    $builder->orderBy('created_at', 'DESC')->orderBy('barangay_id', 'ASC');
-    $data = $builder->paginate(50)->withQueryString();
+    $data = Beneficiary::with('barangay.municipality')
+      ->when($year, function ($query, $year) {
+        $query->ofYear($year);
+      })
+      ->when($barangayName, function ($query, $barangayName) {
+        $query->whereHas('barangay', function ($query) use ($barangayName) {
+          $query->where('name', $barangayName);
+        });
+      })
+      ->when($searchTerm, function ($query, $searchTerm) {
+        $query->whereNameLike($searchTerm);
+      })
+      ->when($project_id, function ($query, $project_id) {
+        $query->where('project_id', $project_id);
+      })
+      ->orderBy('created_at', 'DESC')
+      ->orderBy('barangay_id', 'ASC')
+      ->paginate(50)->withQueryString();
 
     return view('pages.historical.index', compact('data', 'year', 'searchTerm', 'barangayName'));
   }
