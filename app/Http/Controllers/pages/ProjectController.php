@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\pages;
 
+use App\Exports\BeneficiaryExport;
 use App\Http\Controllers\Controller;
+use App\Imports\BeneficiaryImport;
 use App\Models\Project;
+use DB;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Str;
 
 class ProjectController extends Controller
 {
@@ -19,9 +24,10 @@ class ProjectController extends Controller
 
     $searchTerm = $request->input('q');
 
-    $projects = Project::when($searchTerm, function ($query, $searchTerm) {
-      $query->where('name', 'LIKE', "%{$searchTerm}%");
-    })
+    $projects = Project::with('beneficiaries')
+      ->when($searchTerm, function ($query, $searchTerm) {
+        $query->where('name', 'LIKE', "%{$searchTerm}%");
+      })
       ->paginate(10)->withQueryString();
 
     if ($request->collect()->isEmpty() && $projects->isEmpty()) {
@@ -47,10 +53,24 @@ class ProjectController extends Controller
     $validatedData = $request->validate([
       'name' => 'required|string|max:255',
       'location' => 'required|string',
+      'datafile' => 'nullable|mimes:csv,xls,xlsx',
+      'year' => 'required_if_accepted:datafile|integer|min:2019|max:' . date('Y'),
     ]);
 
-    $project = Project::create($validatedData);
-    return redirect()->route('projects.index')->with('success', "Project {$project->name} created successfully");
+    DB::transaction(function () use ($request, &$message) {
+      $project = Project::create($request->only(['name', 'location']));
+      $message = "Project {$project->name} created successfully";
+
+      if (!$request->hasFile('datafile'))
+        return;
+
+      Excel::import(new BeneficiaryImport(project: $project), $request->file('datafile'));
+
+      $count = $project->beneficiaries()->count();
+      $message .= " with {$count} imported beneficiaries.";
+    });
+
+    return redirect()->route('projects.index')->with('success', $message);
   }
 
   /**
@@ -92,5 +112,19 @@ class ProjectController extends Controller
     $project_name = $project->name;
 
     return redirect()->back()->with(['success' => "Project {$project_name} deleted successfully"]);
+  }
+
+  public function destroyWithBeneficiaries(Project $project)
+  {
+    $project->beneficiaries()->delete();
+    $project->delete();
+    $project_name = $project->name;
+
+    return redirect()->back()->with(['success' => "Project {$project_name} and its beneficiaries successfully deleted"]);
+  }
+
+  public function exportToExcel(Project $project)
+  {
+    return Excel::download(new BeneficiaryExport(project: $project), 'beneficiaries-' . Str::slug($project->name) . '.xlsx');
   }
 }

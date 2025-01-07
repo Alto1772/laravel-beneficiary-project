@@ -41,6 +41,39 @@ class Beneficiary extends Model
   }
 
   /**
+   * Parse and validate a formatted beneficiary name.
+   *
+   * @param string $name
+   * @return array|null Returns array with parsed name components or null if invalid
+   */
+  private static function parseName(string $name): array
+  {
+    $name = trim($name);
+
+    $result = [];
+
+    // Pattern 1: "LastName, FirstName MI"
+    if (preg_match('/^([^,]+),\s*([^,\s]+?)(?:\s+(\w+.?))?$/', $name, $matches)) {
+      $result = [
+        'last_name' => trim($matches[1]),
+        'first_name' => trim($matches[2]),
+        'middle_initial' => isset($matches[3]) ? trim($matches[3]) : null
+      ];
+    }
+
+    // Pattern 2: Single name (FirstName only)
+    if (preg_match('/^([^,\s]+)$/', $name, $matches)) {
+      $result = [
+        'first_name' => trim($matches[1]),
+      ];
+    }
+
+    debug($name);
+    debug(implode('|', $result));
+    return $result;
+  }
+
+  /**
    * Accessor for the 'name' attribute.
    *
    * @return \Illuminate\Database\Eloquent\Casts\Attribute
@@ -49,7 +82,7 @@ class Beneficiary extends Model
   {
     return Attribute::make(
       get: fn() => $this->formatName(),
-      set: fn($value) => ['first_name' => $value]
+      set: fn($value) => self::parseName($value),
     );
   }
 

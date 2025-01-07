@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Beneficiary;
+use App\Models\Project;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -12,11 +13,13 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 
 class BeneficiaryExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithStyles
 {
-  private Carbon|null $year;
+  private ?Carbon $year;
+  private ?Project $project;
 
-  public function __construct(int $year = null)
+  public function __construct(int $year = null, Project $project = null)
   {
     $this->year = $year !== null ? Carbon::createFromDate($year)->startOfYear() : null;
+    $this->project = $project;
   }
 
   public function query()
@@ -24,6 +27,9 @@ class BeneficiaryExport implements FromQuery, WithMapping, WithHeadings, ShouldA
     return Beneficiary::with('barangay.municipality')
       ->when($this->year, function ($query, $year) {
         $query->ofYear($year);
+      })
+      ->when($this->project, function ($query, $project) {
+        $query->where('project_id', $project->id);
       });
   }
 

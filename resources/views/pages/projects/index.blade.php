@@ -1,12 +1,13 @@
 @extends('layouts/contentNavbarLayout', ['container' => 'container-lg'])
 
-@section('title', 'Projects Table | ' . config('variables.templateName'))
+@section('title', 'Projects | ' . config('variables.templateName'))
 
 @section('page-script')
     <script>
         window.deleteRouteTemplate = "{{ route('projects.destroy', ['project' => ':id']) }}";
+        window.deleteAllRouteTemplate = "{{ route('projects.deleteAll', ['project' => ':id']) }}";
     </script>
-    @vite('resources/assets/js/beneficiary-index.js')
+    @vite('resources/assets/js/projects-index.js')
 @endsection
 
 @section('content')
@@ -37,17 +38,19 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Location</th>
+                        <th>Count</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
                     @foreach ($projects as $project)
                         <tr>
-                            <td><span>{{ $project->id }}</span></td>
+                            <td>{{ $project->id }}</td>
                             <td><a
                                     href="{{ route('beneficiary.index', ['project_id' => $project->id]) }}">{{ $project->name }}</a>
                             </td>
-                            <td><span>{{ $project->location }}</span></td>
+                            <td>{{ $project->location }}</td>
+                            <td>{{ $project->beneficiaries->count() }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -59,12 +62,17 @@
                                             Edit</a>
                                         <button type="button" class="dropdown-item" id="deleteEntryButton"
                                             data-id="{{ $project->id }}">
-                                            <i class="bx bx-trash me-1"></i> Delete
+                                            <i class="bx bx-trash me-1"></i> Delete Project
                                         </button>
                                         <a href="{{ route('beneficiary.index', ['project_id' => $project->id]) }}"
                                             class="dropdown-item">
                                             <i class="bx bx-gift me-1"></i>
-                                            Beneficiaries
+                                            View Beneficiaries
+                                        </a>
+                                        <a href="{{ route('projects.export', ['project' => $project]) }}"
+                                            class="dropdown-item">
+                                            <i class="bx bx-export me-1"></i>
+                                            Export Beneficiaries
                                         </a>
                                     </div>
                                 </div>
@@ -97,11 +105,12 @@
                     Are you sure you want to delete this project?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary me-3" data-bs-dismiss="modal">Cancel</button>
                     <form id="deleteEntryForm" method="POST">
                         @csrf
                         @method('delete')
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger me-3">Delete Project</button>
+                        <button type="submit" class="btn btn-warning me-3">Delete All</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </form>
                 </div>
             </div>
