@@ -69,6 +69,6 @@ Route::prefix('/admin')->group(function () {
   Route::resource('/projects', ProjectController::class)->middleware(['auth']);
   Route::controller(ProjectController::class)->middleware(['auth'])->group(function () {
     Route::get('/projects/{project}/export', 'exportToExcel')->name('projects.export');
-    Route::delete('/projects/{project}/delete-all', 'destroyWithBeneficiaries')->name('projects.deleteAll');
+    Route::delete('/projects/{project}/delete-all', 'deleteProjectAndBeneficiaries')->name('projects.deleteAll');
   });
 });

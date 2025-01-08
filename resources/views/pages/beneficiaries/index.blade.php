@@ -33,7 +33,7 @@
                         @php
                             $params = [];
                             if (request()->has('project_id')) {
-                                $params['project_id'] = request()->get('project_id');
+                                $params['project_id'] = request('project_id');
                             }
                         @endphp
                         <a class="dropdown-item" href="{{ route('beneficiary.create', $params) }}"><i

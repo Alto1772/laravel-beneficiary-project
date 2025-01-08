@@ -50,7 +50,7 @@
                                     href="{{ route('beneficiary.index', ['project_id' => $project->id]) }}">{{ $project->name }}</a>
                             </td>
                             <td>{{ $project->location }}</td>
-                            <td>{{ $project->beneficiaries->count() }}</td>
+                            <td>{{ $project->beneficiaries_count }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -108,8 +108,8 @@
                     <form id="deleteEntryForm" method="POST">
                         @csrf
                         @method('delete')
-                        <button type="submit" class="btn btn-danger me-3">Delete Project</button>
-                        <button type="submit" class="btn btn-warning me-3">Delete All</button>
+                        <button type="button" id="deleteButton" class="btn btn-danger me-3">Delete Project</button>
+                        <button type="button" id="deleteAllButton" class="btn btn-warning me-3">Delete All</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </form>
                 </div>

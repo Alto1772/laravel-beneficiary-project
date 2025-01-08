@@ -24,7 +24,7 @@ class ProjectController extends Controller
 
     $searchTerm = $request->input('q');
 
-    $projects = Project::with('beneficiaries')
+    $projects = Project::withCount('beneficiaries')
       ->when($searchTerm, function ($query, $searchTerm) {
         $query->where('name', 'LIKE', "%{$searchTerm}%");
       })
@@ -50,11 +50,11 @@ class ProjectController extends Controller
    */
   public function store(Request $request)
   {
-    $validatedData = $request->validate([
+    $request->validate([
       'name' => 'required|string|max:255',
       'location' => 'required|string',
       'datafile' => 'nullable|mimes:csv,xls,xlsx',
-      'year' => 'required_if_accepted:datafile|integer|min:2019|max:' . date('Y'),
+      'year' => 'nullable|integer|min:2019|max:' . date('Y'),
     ]);
 
     DB::transaction(function () use ($request, &$message) {
@@ -64,7 +64,7 @@ class ProjectController extends Controller
       if (!$request->hasFile('datafile'))
         return;
 
-      Excel::import(new BeneficiaryImport(project: $project), $request->file('datafile'));
+      Excel::import(new BeneficiaryImport($request->get('year'), $project), $request->file('datafile'));
 
       $count = $project->beneficiaries()->count();
       $message .= " with {$count} imported beneficiaries.";
@@ -114,13 +114,13 @@ class ProjectController extends Controller
     return redirect()->back()->with(['success' => "Project {$project_name} deleted successfully"]);
   }
 
-  public function destroyWithBeneficiaries(Project $project)
+  public function deleteProjectAndBeneficiaries(Project $project)
   {
     $project->beneficiaries()->delete();
     $project->delete();
     $project_name = $project->name;
 
-    return redirect()->back()->with(['success' => "Project {$project_name} and its beneficiaries successfully deleted"]);
+    return redirect()->back()->with(['success' => "Project {$project_name} and all its beneficiaries have been successfully deleted."]);
   }
 
   public function exportToExcel(Project $project)

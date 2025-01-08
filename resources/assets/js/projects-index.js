@@ -35,15 +35,10 @@
   };
 
   const deleteButtons = document.querySelectorAll('#deleteEntryButton');
-  const deleteModalForm = document.querySelector('#deleteEntryForm');
-  const deleteAllModalForm = document.querySelector('#formDeleteAndAll');
+  const modalDeleteButton = document.querySelector('#deleteEntryForm #deleteButton');
+  const modalDeleteAllButton = document.querySelector('#deleteEntryForm #deleteAllButton');
   deleteButtons.forEach(button => button.addEventListener('click', () => openDeleteModal(button.dataset.id)));
-  deleteModalForm.addEventListener('submit', event => {
-    event.preventDefault();
-    deleteEntry(getEntryId(), global.deleteRouteTemplate);
-  });
-  deleteAllModalForm.addEventListener('submit', event => {
-    event.preventDefault();
-    deleteEntry(getEntryId(), global.deleteAllRouteTemplate);
-  });
+
+  modalDeleteButton.addEventListener('click', () => deleteEntry(getEntryId(), global.deleteRouteTemplate));
+  modalDeleteAllButton.addEventListener('click', () => deleteEntry(getEntryId(), global.deleteAllRouteTemplate));
 })(window);

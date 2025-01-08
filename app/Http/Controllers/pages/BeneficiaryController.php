@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\pages;
 
 use App\Http\Controllers\Controller;
-use App\Models\Barangay;
 use App\Models\Beneficiary;
-use App\Models\Municipality;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -68,21 +66,21 @@ class BeneficiaryController extends Controller
       'last_name' => 'nullable|string|max:20',
       'middle_initial' => 'nullable|string|max:5',
       'barangay' => 'required|exists:barangays,id',
-      'municipality' => 'required|exists:municipalities,id',
       'age' => 'required|integer|min:1|max:200',
       'project_id' => 'nullable|exists:projects,id',
     ]);
 
-    Beneficiary::create([
+    $beneficiary = new Beneficiary([
       'first_name' => $validatedData['first_name'],
       'last_name' => $validatedData['last_name'],
       'middle_initial' => $validatedData['middle_initial'],
-      'barangay_id' => $validatedData['barangay'],
-      'municipality_id' => $validatedData['municipality'],
-      'project_id' => $validatedData['project_id'],
       'age' => $validatedData['age'],
-      'year' => Carbon::now()->year,
     ]);
+
+    $beneficiary->barangay()->associate($validatedData['barangay']);
+    if (isset($validatedData['project_id']))
+      $beneficiary->project()->associate($validatedData['project_id']);
+    $beneficiary->save();
 
     return redirect($request->session()->get('previousPage', route('beneficiary.index')))
       ->with(['success' => 'Beneficiary added successfully']);
@@ -95,19 +93,18 @@ class BeneficiaryController extends Controller
       'last_name' => 'nullable|string|max:20',
       'middle_initial' => 'nullable|string|max:5',
       'barangay' => 'required|exists:barangays,id',
-      'municipality' => 'required|exists:municipalities,id',
       'age' => 'required|integer|min:1|max:200',
     ]);
 
     $beneficiary = Beneficiary::findOrFail($id);
-    $beneficiary->update([
+    $beneficiary->fill([
       'first_name' => $validatedData['first_name'],
       'last_name' => $validatedData['last_name'],
       'middle_initial' => $validatedData['middle_initial'],
-      'barangay_id' => $validatedData['barangay'],
-      'municipality_id' => $validatedData['municipality'],
       'age' => $validatedData['age'],
     ]);
+    $beneficiary->barangay()->associate($validatedData['barangay']);
+    $beneficiary->save();
 
     return redirect($request->session()->get('previousPage', route('beneficiary.index')))
       ->with(['success' => 'Beneficiary updated successfully']);

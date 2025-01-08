@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 @if (request()->has('project_id'))
-                    <input type="hidden" name="project_id" value="{{ request()->get('project_id') }}">
+                    <input type="hidden" name="project_id" value="{{ request('project_id') }}">
                 @endif
                 <div class="d-flex justify-content-start align-items-start">
                     <button type="submit" class="btn btn-primary me-5" id="submitButton" disabled>Submit</button>

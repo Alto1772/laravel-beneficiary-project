@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,13 @@ class Beneficiary extends Model
 {
   use HasFactory;
 
-  protected $fillable = ['first_name', 'last_name', 'middle_initial', 'barangay_id', 'age', 'number', 'created_at', 'project_id'];
+  protected $fillable = [
+    'first_name',
+    'last_name',
+    'middle_initial',
+    'age',
+    'number',
+  ];
 
   public function barangay()
   {
@@ -50,27 +57,17 @@ class Beneficiary extends Model
   {
     $name = trim($name);
 
-    $result = [];
-
-    // Pattern 1: "LastName, FirstName MI"
-    if (preg_match('/^([^,]+),\s*([^,\s]+?)(?:\s+(\w+.?))?$/', $name, $matches)) {
-      $result = [
+    if (preg_match('/^([^,]+),\s*([^,]+?)\s*(?:\s+(\w+.?))?$/', $name, $matches)) {
+      return [
         'last_name' => trim($matches[1]),
         'first_name' => trim($matches[2]),
         'middle_initial' => isset($matches[3]) ? trim($matches[3]) : null
       ];
-    }
-
-    // Pattern 2: Single name (FirstName only)
-    if (preg_match('/^([^,\s]+)$/', $name, $matches)) {
-      $result = [
-        'first_name' => trim($matches[1]),
+    } else {
+      return [
+        'first_name' => $name,
       ];
     }
-
-    debug($name);
-    debug(implode('|', $result));
-    return $result;
   }
 
   /**
@@ -93,16 +90,14 @@ class Beneficiary extends Model
    * @param int $year
    * @return \Illuminate\Database\Eloquent\Builder
    */
-  public function scopeOfYear($query, $year)
+  public function scopeOfYear(Builder $query, ?int $year)
   {
-    if ($year !== null) {
-      return $query->whereYear('created_at', $year);
-    } else {
-      return $query;
-    }
+    return $query->when($year, function (Builder $query, $year) {
+      $query->whereYear('created_at', $year);
+    });
   }
 
-  public function scopeWhereNameLike($query, $name)
+  public function scopeWhereNameLike(Builder $query, string $name)
   {
     return $query->where('first_name', 'LIKE', "%{$name}%")
       ->orWhere('last_name', 'LIKE', "%{$name}%")
