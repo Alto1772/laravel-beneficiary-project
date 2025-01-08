@@ -66,7 +66,7 @@ Route::prefix('/admin')->group(function () {
     Route::post('/account/update/password', 'updatePassword')->name('account.update.password');
   });
 
-  Route::resource('/projects', ProjectController::class)->middleware(['auth']);
+  Route::resource('/projects', ProjectController::class)->middleware(['auth'])->except(['show']);
   Route::controller(ProjectController::class)->middleware(['auth'])->group(function () {
     Route::get('/projects/{project}/export', 'exportToExcel')->name('projects.export');
     Route::delete('/projects/{project}/delete-all', 'deleteProjectAndBeneficiaries')->name('projects.deleteAll');
